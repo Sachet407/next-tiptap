@@ -1,18 +1,13 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-
+import { createContext, ReactNode, useContext, useMemo, useState, useEffect } from "react";
 import { EditorContent, type Editor } from "@tiptap/react";
-
-import SourceEditor from "@/components/source-editor/editor";
-
 import { getEditorContent } from "../helpers/tiptap";
 import { cn } from "../helpers/utils";
 
 type TiptapContextType = {
   editor: Editor;
   isFullScreen: boolean;
-  isSourceMode: boolean;
   toggleFullScreen: () => void;
-  toggleSourceMode: () => void;
+
 };
 
 const TiptapContext = createContext<TiptapContextType>({} as TiptapContextType);
@@ -32,30 +27,26 @@ export const TiptapProvider = ({
   slotAfter,
 }: TiptapProviderProps) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [isSourceMode, setIsSourceMode] = useState(false);
+
 
   const providerValue = useMemo(
     () => ({
       editor,
       isFullScreen,
-      isSourceMode,
       toggleFullScreen: () => setIsFullScreen((prev) => !prev),
-      toggleSourceMode: () => setIsSourceMode((prev) => !prev),
+   
     }),
-    [editor, isFullScreen, isSourceMode]
+    [editor, isFullScreen]
   );
 
-  const editorContent = isSourceMode ? (
-    <SourceEditor initialContent={getEditorContent(editor, "html")} />
-  ) : (
-    <EditorContent editor={editor} className="rte-editor__container" />
-  );
+
+
+  const editorContent = <EditorContent editor={editor} className="rte-editor__container" />
+
 
   return (
     <TiptapContext value={providerValue}>
-      <div
-        className={cn("rte-editor", { "rte-editor--fullscreen": isFullScreen })}
-      >
+      <div className={cn("rte-editor", { "rte-editor--fullscreen": isFullScreen })}>
         {slotBefore}
         {editorContent}
         {slotAfter}

@@ -1,6 +1,6 @@
 import EditForm from "./_components/edit-form";
 
-import "./style.scss";
+import "./style.scss"
 
 export default function EditPage() {
   return (

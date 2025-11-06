@@ -29,7 +29,7 @@ import {
   TbClipboard,
   TbCheck,
   TbMaximize,
-  TbSourceCode,
+
   TbLetterCase,
   TbTrash,
   TbPhoto,
@@ -88,7 +88,6 @@ export const icons = {
   Underline: TbUnderline,
   Strike: TbStrikethrough,
   Code: TbCode,
-  SourceCode: TbSourceCode,
   Subscript: TbSubscript,
   Superscript: TbSuperscript,
   BulletList: TbList,

@@ -7,7 +7,7 @@ const fontMono = JetBrains_Mono({
 });
 const fontSans = Open_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
-import Header from "@/components/shared/header";
+
 
 import "@/styles/globals.css";
 
@@ -40,7 +40,6 @@ export default function RootLayout({
       className={`${fontMono.variable} ${fontSans.variable} antialiased`}
     >
       <body>
-        <Header />
         <main>{children}</main>
       </body>
     </html>

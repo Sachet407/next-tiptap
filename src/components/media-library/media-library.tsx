@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import Button from "@/components/tiptap-editor/components/ui/button";
-
 import MediaGallery from "./media-gallery";
-
 import "./style.scss";
 
 interface MediaLibraryProps {
@@ -49,16 +46,16 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
           url,
           width: image.width,
           height: image.height,
-          format: file.type.split("/")[1],
-          display_name: file.name.split(/\.\w+$/)[0],
+          format: file.type.split("/")[1] || "unknown",
+          display_name: file.name.replace(/\.\w+$/, ""),
         });
       };
       image.src = url;
     });
   };
 
-  const uploadImage = async (file: File) => {
-    if (!file.type.startsWith("image/")) return;
+  const uploadImage = async (file: File): Promise<ImageData | null> => {
+    if (!file.type.startsWith("image/")) return null;
 
     const formData = new FormData();
     formData.append("file", file);
@@ -68,9 +65,14 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
         method: "POST",
         body: formData,
       });
-      return await response.json();
+
+      if (!response.ok) throw new Error("Failed to upload image");
+
+      const result = await response.json();
+      return result;
     } catch (error) {
       console.error("Upload error:", error);
+      return null;
     }
   };
 
@@ -80,20 +82,32 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
 
     setUploading(true);
 
+    // Generate previews
     const previewPromises = Array.from(files).map(loadImage);
     const loadedPreviews = await Promise.all(previewPromises);
     setPreviews(loadedPreviews);
 
+    // Upload files
     const uploadPromises = Array.from(files).map(uploadImage);
-    const uploadImages = await Promise.all(uploadPromises);
+    const uploadedResults = await Promise.all(uploadPromises);
 
+    // Clean up temporary URLs
     loadedPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
     setPreviews([]);
-    setImages((prev) => [...uploadImages, ...prev]);
+
+    // Filter out failed uploads (null)
+    const validUploads = uploadedResults.filter(
+      (img): img is ImageData => img !== null && typeof img === "object"
+    );
+
+    // Update safely
+    setImages((prev) => [...validUploads, ...(Array.isArray(prev) ? prev : [])]);
     setUploading(false);
   };
 
-  const handleFinish = () => selected !== null && onInsert?.(selected);
+  const handleFinish = () => {
+    if (selected) onInsert?.(selected);
+  };
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -101,9 +115,15 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
         setLoading(true);
         const response = await fetch("/api/images");
         const data = await response.json();
-        setImages(data);
+        if (Array.isArray(data)) {
+          setImages(data);
+        } else {
+          console.warn("Unexpected response for /api/images:", data);
+          setImages([]);
+        }
       } catch (error) {
         console.error("Error fetching images:", error);
+        setImages([]);
       } finally {
         setLoading(false);
       }
@@ -126,7 +146,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
           <div className="media-library__spinner" aria-label="Loading images" />
         ) : (
           <MediaGallery
-            data={[...previews, ...images]}
+            data={[...(Array.isArray(previews) ? previews : []), ...(Array.isArray(images) ? images : [])]}
             onSelect={setSelected}
             selected={selected}
           />

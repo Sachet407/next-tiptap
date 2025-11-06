@@ -10,9 +10,9 @@ export const StatusBar = () => {
   const {
     editor,
     isFullScreen,
-    isSourceMode,
+
     toggleFullScreen,
-    toggleSourceMode,
+
   } = useTiptapEditor();
 
   const count = useEditorState({
@@ -26,12 +26,6 @@ export const StatusBar = () => {
   return (
     <div className="rte-status-bar">
       <Toolbar dense>
-        <MenuButton
-          icon="SourceCode"
-          text="Source Code"
-          active={isSourceMode}
-          onClick={toggleSourceMode}
-        />
         <MenuButton
           icon="Maximize"
           text="Fullscreen"

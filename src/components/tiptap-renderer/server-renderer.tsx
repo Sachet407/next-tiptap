@@ -5,9 +5,9 @@ interface TiptapRendererProps {
   children: string;
 }
 
-const TiptapRenderer = ({ children }: TiptapRendererProps) => {
+const TiptapRenderer = async({ children }: TiptapRendererProps) => {
   const processor = createProcessor({ components });
-  const processed = processor.processSync(children);
+  const processed = await processor.processSync(children);
   return processed.result;
 };
 
