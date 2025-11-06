@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef } from "react";
 import TiptapEditor, { type TiptapEditorRef } from "@/components/tiptap-editor";
 
 import { getEditorContent } from "@/components/tiptap-editor/helpers/tiptap";
-import { EditorContent, type Editor } from "@tiptap/react";
+
 
 
 export default function EditForm() {
