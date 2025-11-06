@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-import { useForm } from "react-hook-form";
 
 import TiptapEditor, { type TiptapEditorRef } from "@/components/tiptap-editor";
 
@@ -14,10 +13,7 @@ export default function EditForm() {
   const editorRef = useRef<TiptapEditorRef>(null);
 
 
-  type TiptapContextType = {
-  editor: Editor;
 
-};
 
   const calculateReadingTime = useCallback(() => {
     const editor = editorRef.current;

@@ -43,7 +43,10 @@ export function createExtensions({ placeholder }: ExtensionConfig) {
       },
     }),
     CellAlign,
-    TextAlign,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'], // ← Add this configuration
+      alignments: ['left', 'center', 'right', 'justify'],
+    }),
     Table.configure({ table: { cellMinWidth: 35, resizable: true } }),
     CharacterCount,
     Selection,
