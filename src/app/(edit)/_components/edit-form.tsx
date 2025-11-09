@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 
 import TiptapEditor, { type TiptapEditorRef } from "@/components/tiptap-editor";
@@ -42,7 +42,12 @@ export default function EditForm() {
                 imageCaption: "Type caption for image (optional)",
               }}
             />
-            <button onClick={handleSave} className="bg-purple-700 p-7 text-xl">save</button>
+                    <button
+            onClick={handleSave}
+            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-lg rounded-xl shadow-md hover:shadow-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-300"
+          >
+            💾 Save Changes
+          </button>
     </div>
   );
 }

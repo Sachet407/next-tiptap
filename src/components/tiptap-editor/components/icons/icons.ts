@@ -71,8 +71,6 @@ import {
   TbScissors,
   TbCopy,
   TbMoodSmile,
-  TbLeaf,
-  TbApple,
   TbSearch,
 } from "react-icons/tb";
 
